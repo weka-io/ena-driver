@@ -276,6 +276,7 @@ static inline void _kc_skb_add_rx_frag(struct sk_buff *skb, int i,
 /*****************************************************************************/
 #if ( LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0) )
 #if !(RHEL_RELEASE_CODE)
+#if 0
 static inline bool ether_addr_equal(const u8 *addr1, const u8 *addr2)
 {
 	const u16 *a = (const u16 *)addr1;
@@ -283,6 +284,7 @@ static inline bool ether_addr_equal(const u8 *addr1, const u8 *addr2)
 
 	return ((a[0] ^ b[0]) | (a[1] ^ b[1]) | (a[2] ^ b[2])) == 0;
 }
+#endif
 #endif
 #endif /* >= 3.5.0 */
 
@@ -326,10 +328,12 @@ static inline void napi_hash_add(struct napi_struct *napi)
 #endif
 
 #if !(RHEL_RELEASE_CODE)
+#if 0
 static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
 {
 	return index % n_rx_rings;
 }
+#endif
 #endif
 #else /* >= 3.8.0 */
 #ifndef HAVE_SRIOV_CONFIGURE
@@ -368,10 +372,12 @@ static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
 
 #if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)) && \
 	!(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(6,8))
+#if 0
 static inline void reinit_completion(struct completion *x)
 {
          x->done = 0;
 }
+#endif
 #endif /* SLE 12 */
 #endif /* >= 3.13.0 */
 
@@ -379,6 +385,7 @@ static inline void reinit_completion(struct completion *x)
 #if (( LINUX_VERSION_CODE < KERNEL_VERSION(3,13,8) ) && \
      !(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE <= RHEL_RELEASE_VERSION(7,3)) && \
      !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)))
+#if 0
 enum pkt_hash_types {
 	PKT_HASH_TYPE_NONE,	/* Undefined type */
 	PKT_HASH_TYPE_L2,	/* Input: src_MAC, dest_MAC */
@@ -392,6 +399,7 @@ static inline void skb_set_hash(struct sk_buff *skb, __u32 hash,
 	skb->l4_rxhash = (type == PKT_HASH_TYPE_L4);
 	skb->rxhash = hash;
 }
+#endif
 #endif
 
 /*****************************************************************************/
@@ -414,10 +422,12 @@ static inline int pci_msix_vec_count(struct pci_dev *dev)
 	return (control & 0x7FF) + 1;
 }
 #if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0))
+#if 0
 static inline void ether_addr_copy(u8 *dst, const u8 *src)
 {
 	memcpy(dst, src, 6);
 }
+#endif
 #endif /* SLE 12 */
 #endif /* RHEL 7 */
 #endif
