@@ -58,7 +58,7 @@ Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
 #include <linux/init.h>
 #include <linux/ioport.h>
 #include <linux/ip.h>
-#include <linux/kconfig.h>
+//#include <linux/kconfig.h>
 #include <linux/list.h>
 #include <linux/mii.h>
 #include <linux/module.h>
@@ -146,9 +146,9 @@ Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
 #define SLE_VERSION(a,b,c) KERNEL_VERSION(a,b,c)
 #endif
 #ifdef CONFIG_SUSE_KERNEL
-#if ( LINUX_VERSION_CODE >= KERNEL_VERSION(3,12,28) )
+#if ( LINUX_VERSION_CODE >= KERNEL_VERSION(3,0,0) )
 /* SLES12 is at least 3.12.28+ based */
-#define SLE_VERSION_CODE SLE_VERSION(12,0,0)
+#define SLE_VERSION_CODE SLE_VERSION(11,4,0)
 #endif /* LINUX_VERSION_CODE == KERNEL_VERSION(x,y,z) */
 #endif /* CONFIG_SUSE_KERNEL */
 #ifndef SLE_VERSION_CODE
@@ -275,7 +275,7 @@ static inline void _kc_skb_add_rx_frag(struct sk_buff *skb, int i,
 
 /*****************************************************************************/
 #if ( LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0) )
-#if !(RHEL_RELEASE_CODE)
+#if !(RHEL_RELEASE_CODE || SLE_VERSION_CODE)
 static inline bool ether_addr_equal(const u8 *addr1, const u8 *addr2)
 {
 	const u16 *a = (const u16 *)addr1;
@@ -325,7 +325,7 @@ static inline void napi_hash_add(struct napi_struct *napi)
 #undef CONFIG_RFS_ACCEL
 #endif
 
-#if !(RHEL_RELEASE_CODE)
+#if !(RHEL_RELEASE_CODE || SLE_VERSION_CODE)
 static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
 {
 	return index % n_rx_rings;
@@ -346,7 +346,7 @@ static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
 
 /*****************************************************************************/
 #if ( LINUX_VERSION_CODE >= KERNEL_VERSION(3,12,0) )
-#if ( SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0))
+#if ( SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0))
 #define HAVE_NDO_SELECT_QUEUE_ACCEL_FALLBACK
 #endif
 #endif /* >= 3.12.0 */
@@ -366,7 +366,7 @@ static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
 # define u64_stats_init(syncp)  do { } while (0)
 #endif
 
-#if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)) && \
+#if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0)) && \
 	!(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(6,8))
 static inline void reinit_completion(struct completion *x)
 {
@@ -378,7 +378,7 @@ static inline void reinit_completion(struct completion *x)
 /*****************************************************************************/
 #if (( LINUX_VERSION_CODE < KERNEL_VERSION(3,13,8) ) && \
      !(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE <= RHEL_RELEASE_VERSION(7,3)) && \
-     !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)))
+     !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0)))
 enum pkt_hash_types {
 	PKT_HASH_TYPE_NONE,	/* Undefined type */
 	PKT_HASH_TYPE_L2,	/* Input: src_MAC, dest_MAC */
@@ -413,7 +413,7 @@ static inline int pci_msix_vec_count(struct pci_dev *dev)
 	pci_read_config_word(dev, pos + PCI_MSIX_FLAGS, &control);
 	return (control & 0x7FF) + 1;
 }
-#if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0))
+#if !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0))
 static inline void ether_addr_copy(u8 *dst, const u8 *src)
 {
 	memcpy(dst, src, 6);
@@ -428,7 +428,7 @@ static inline void ether_addr_copy(u8 *dst, const u8 *src)
 
 #if ( LINUX_VERSION_CODE >= KERNEL_VERSION(3,15,0) || \
 	(UBUNTU_VERSION_CODE && UBUNTU_VERSION_CODE > UBUNTU_VERSION(3,13,0,24))) || \
-	(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)) || \
+	(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0)) || \
 	(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE <= RHEL_RELEASE_VERSION(7,3))
 #else
 static inline bool u64_stats_fetch_retry_irq(const struct u64_stats_sync *syncp,
@@ -454,7 +454,7 @@ static inline unsigned int u64_stats_fetch_begin_irq(const struct u64_stats_sync
 /*****************************************************************************/
 
 #if ( LINUX_VERSION_CODE >= KERNEL_VERSION(3,19,0) ) \
-	|| (SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)) \
+	|| (SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0)) \
 	|| (RHEL_RELEASE_CODE && RHEL_RELEASE_CODE <= RHEL_RELEASE_VERSION(7,3))
 #else
 static inline void netdev_rss_key_fill(void *buffer, size_t len)
@@ -464,7 +464,7 @@ static inline void netdev_rss_key_fill(void *buffer, size_t len)
 #endif
 
 #if ( LINUX_VERSION_CODE < KERNEL_VERSION(3,19,0) ) && \
-    !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(12,0,0)) && \
+    !(SLE_VERSION_CODE && SLE_VERSION_CODE >= SLE_VERSION(11,4,0)) && \
     !(RHEL_RELEASE_CODE && RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(6,9))
 
 static inline void napi_schedule_irqoff(struct napi_struct *n)
@@ -477,10 +477,11 @@ static inline void __napi_schedule_irqoff(struct napi_struct *n)
 	__napi_schedule(n);
 }
 
-#ifndef READ_ONCE
-#define READ_ONCE(var) (*((volatile typeof(var) *)(&(var))))
 #endif
 #endif /* Kernel 3.19 */
+
+#ifndef READ_ONCE
+#define READ_ONCE(var) (*((volatile typeof(var) *)(&(var))))
 
 /*****************************************************************************/
 
